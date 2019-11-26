@@ -5,6 +5,7 @@ const homeRoutes = require('./routes/home')
 const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const coursesRoutes = require('./routes/courses')
+const path = require('path')
 
 const app = express() // Создаём сервер
 
@@ -17,7 +18,7 @@ const hbs = expressHandlebars.create({
 app.engine('hbs', hbs.engine)//Регистрируем наличие движка
 app.set('view engine', 'hbs')//Подключаем движок к экспресс
 app.set('views', 'pages')//Указываем папку с шаблонами
-app.use(express.static('public')) //Добавляем обработку статических
+app.use(express.static(path.join(__dirname, 'public'))) //Добавляем обработку статических
 app.use(express.urlencoded({
     extanded: true
 })) 
