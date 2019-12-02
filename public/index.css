@@ -33,3 +33,13 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.form_a {
+    margin-left: unset !important;
+    margin-bottom: 2rem;
+}
