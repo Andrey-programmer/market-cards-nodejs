@@ -2,6 +2,7 @@ const {Router} = require('express')
 const Course = require('../models/course')
 const router = Router()
 
+
 router.post('/add', async (req, res) => {
     const course = await Course.findById(req.body.id)
     await req.user.addToCart(course)
@@ -14,19 +15,27 @@ router.delete('/remove/:id', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    debugger    
+    
+    const user = await req.user.populate('cart.items.courseId').execPopulate()
+    console.log(user.cart.items)
+ 
+    const courses = user.cart.items.map(item => ({
+        ...item.courseId._doc, //окончание _doc - вытаскивает все данные по id
+        count: item.count
+    }))
 
-    // const card = await Card.fetch()
-    // res.render('card', 
-    // {
-    //     title: 'Корзина',
-    //     isCard: true,
-    //     courses: card.courses,
-    //     price: card.price
-    // })
-    res.json({
-        test: true
+    res.render('card', 
+    {
+        title: 'Корзина',
+        isCard: true,
+        courses: courses,
+        price: courses.reduce((total, course) => {
+            return total += course.price * course.count
+        }, 0) //Возвращаем суммарную стоимость
     })
+    // res.json({
+        //     test: true
+    // })
 })
 
 module.exports = router
