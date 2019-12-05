@@ -7,6 +7,7 @@ const homeRoutes = require('./routes/home')
 const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const coursesRoutes = require('./routes/courses')
+const User = require('./models/user')
 
 const app = express() // Создаём сервер
 
@@ -19,6 +20,18 @@ const hbs = expressHandlebars.create({
 app.engine('hbs', hbs.engine)//Регистрируем наличие движка
 app.set('view engine', 'hbs')//Подключаем движок к экспресс
 app.set('views', 'pages')//Указываем папку с шаблонами
+
+app.use( async (req, res, next) => {
+    try {
+        const user = await User.findById('5de8ed8e40bf7d2220c3caba')
+        req.user = user
+        next()  // если всё хорошо продолжаем работу
+    } catch (error) {
+        console.log(error)
+    }
+    
+})
+
 app.use(express.static(path.join(__dirname, 'public'))) //Добавляем обработку статических
 app.use(express.urlencoded({
     extended: true
@@ -55,6 +68,20 @@ async function start() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
+
+        const candidate = await User.findOne() //метод вернет первого попавшегося пользователя если он есть
+        if(!candidate) {
+            const user = new User({
+                email: 'andrey-1302@mail.ru',
+                name: 'Andrey',
+                cart: {
+                    items:[]
+                }
+            })
+
+            await user.save()
+        }
+
         app.listen(PORT, () => {
             console.log(`Server is running on PORT ${PORT}`)
         })
