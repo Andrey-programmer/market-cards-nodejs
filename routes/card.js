@@ -10,17 +10,32 @@ router.post('/add', async (req, res) => {
 })
 
 router.delete('/remove/:id', async (req, res) => {
-    const card = await Card.remove(req.params.id)
-    res.status(200).json(card)
+    await req.user.removeFromCart(req.params.id)
+    const user = await req.user.populate('cart.items.courseId').execPopulate()
+
+    const courses = user.cart.items.map(item => ({
+        ...item.courseId._doc, //окончание _doc - вытаскивает все данные по id
+        count: item.count,
+        id: item.courseId.id
+    }))
+    const cart = {
+        courses,
+        price: courses.reduce((total, course) => {
+            return total += course.price * course.count
+        }, 0) //Возвращаем суммарную стоимость
+    }
+
+    res.status(200).json(cart)
 })
 
 router.get('/', async (req, res) => {
     
     const user = await req.user.populate('cart.items.courseId').execPopulate()
-    console.log(user.cart.items)
+    // console.log(user.cart.items)
  
     const courses = user.cart.items.map(item => ({
-        ...item.courseId._doc, //окончание _doc - вытаскивает все данные по id
+        ...item.courseId._doc, //окончание _doc - вытаскивает все данные по id,
+        id: item.courseId.id,
         count: item.count
     }))
 
