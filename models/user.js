@@ -59,10 +59,15 @@ userSchema.methods.removeFromCart = function(id) {
              return course.courseId.toString() !== id.toString()
          })
     }   else {
-        items[index].count --
+        items[index].count--
     }
 
     this.cart = {items}
+    return this.save()
+}
+
+userSchema.methods.clearCart = function() {
+    this.cart = {items: []} // чистим корзину
     return this.save()
 }
 

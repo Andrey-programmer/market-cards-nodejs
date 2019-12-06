@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     const courses = await Course.find().populate('userId', 'email name').select('price title img') //Забираем все курсы в базе данных
     //метод populate() - получаем пользователя по его  id через userId и указываем поля которые хотим достать(email name)
     //метод select() - выбирает какие поля нужно достать из объекта
-    console.log(courses)
+    // console.log(courses)
 
     res.render(
         'courses',
