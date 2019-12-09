@@ -1,9 +1,10 @@
 const {Router} = require('express')
 const router = Router()
 const Course = require('../models/course')
+const auth = require('../middleware/auth')
 
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
     res.render(
         'add',
         {
@@ -13,7 +14,7 @@ router.get('/', (req, res) => {
     )
 })
  
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     // console.log(req.body)
 
     // const course = new Course(req.body.title, req.body.price, req.body.img)
