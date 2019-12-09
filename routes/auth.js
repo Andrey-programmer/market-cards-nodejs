@@ -10,16 +10,43 @@ router.get('/login', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const user = await User.findById('5de8ed8e40bf7d2220c3caba')
-    req.session.user = user
-    req.session.isAuthenticated = true  //создаем произвольное поле в сессии 
-    req.session.save(err => { // Ждем сохранения сессии а потом делаем редирект
-        if (err) {
-            throw err
-        } else {
-            res.redirect('/')
+    try {
+        // const user = await User.findById('5de8ed8e40bf7d2220c3caba')
+        const {email, password} = req.body
+        const candidate = await User.findOne({email})
+        if(candidate) {
+            
+            if(password === candidate.password) {
+                req.session.user = candidate
+                req.session.isAuthenticated = true  //создаем произвольное поле в сессии 
+                req.session.save(err => { // Ждем сохранения сессии а потом делаем редирект
+                    if (err) {
+                        throw err
+                    } else {
+                        res.redirect('/')
+                    }
+                })
+
+            } else {
+                res.redirect('/auth/login#login')
+            }
+       
+        }   else {
+            res.redirect('/auth/login#login')
         }
-    })
+
+    } catch (error) {
+        console.log(error)
+    }
+    // req.session.user = user
+    // req.session.isAuthenticated = true  //создаем произвольное поле в сессии 
+    // req.session.save(err => { // Ждем сохранения сессии а потом делаем редирект
+    //     if (err) {
+    //         throw err
+    //     } else {
+    //         res.redirect('/')
+    //     }
+    // })
 })
 
 router.get('/logout', async (req, res) => {
@@ -34,5 +61,22 @@ router.get('/logout', async (req, res) => {
             
     })
 
+})
+
+router.post('/register', async (req, res) => {
+    try {
+        const {email, password, repeat, name} = req.body
+
+        const candidate = await User.findOne({email})
+        if(candidate) {
+            res.redirect('/auth/login#register')
+        } else {
+            const user = new User({email, name, password, cart: {items: []}}) //Создаем нового пользователя
+            await user.save() //Ждём пока пользователь сохранится
+            res.redirect('/auth/login#login')
+        }
+    } catch (error) {
+        console.log(error)
+    }
 })
 module.exports = router
