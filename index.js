@@ -1,6 +1,7 @@
 const express = require('express') // Подключаем экспресс
 const path = require('path')
 const mongoose = require('mongoose')
+const session = require('express-session')
 // const path = require('path') // Добавляем модуль пути
 const expressHandlebars = require('express-handlebars') // Подключаем движок
 const homeRoutes = require('./routes/home')
@@ -10,6 +11,7 @@ const ordersRoutes = require('./routes/orders')
 const coursesRoutes = require('./routes/courses')
 const authRoutes = require('./routes/auth')
 const User = require('./models/user')
+const varMiddleware = require('./middleware/variables')
 
 const app = express() // Создаём сервер
 
@@ -23,21 +25,28 @@ app.engine('hbs', hbs.engine)//Регистрируем наличие движ�
 app.set('view engine', 'hbs')//Подключаем движок к экспресс
 app.set('views', 'pages')//Указываем папку с шаблонами
 
-app.use( async (req, res, next) => {
-    try {
-        const user = await User.findById('5de8ed8e40bf7d2220c3caba')
-        req.user = user
-        next()  // если всё хорошо продолжаем работу
-    } catch (error) {
-        console.log(error)
-    }
+// app.use( async (req, res, next) => {
+//     try {
+//         const user = await User.findById('5de8ed8e40bf7d2220c3caba')
+//         req.user = user
+//         next()  // если всё хорошо продолжаем работу
+//     } catch (error) {
+//         console.log(error)
+//     }
     
-})
+// })
 
 app.use(express.static(path.join(__dirname, 'public'))) //Добавляем обработку статических
 app.use(express.urlencoded({
     extended: true
 })) 
+
+app.use(session({
+    secret: 'some secret value',
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(varMiddleware)
 app.use('/', homeRoutes)
 app.use('/add',addRoutes)
 app.use('/courses', coursesRoutes)
@@ -66,25 +75,25 @@ const PORT = process.env.PORT || 3000
 
 async function start() {
     try {
-        const password = "Lak0sta_1302"
+        // const password = "Lak0sta_1302"
         const url = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
 
-        const candidate = await User.findOne() //метод вернет первого попавшегося пользователя если он есть
-        if(!candidate) {
-            const user = new User({
-                email: 'andrey-1302@mail.ru',
-                name: 'Andrey',
-                cart: {
-                    items:[]
-                }
-            })
+        // const candidate = await User.findOne() //метод вернет первого попавшегося пользователя если он есть
+        // if(!candidate) {
+        //     const user = new User({
+        //         email: 'andrey-1302@mail.ru',
+        //         name: 'Andrey',
+        //         cart: {
+        //             items:[]
+        //         }
+        //     })
 
-            await user.save()
-        }
+        //     await user.save()
+        // }
 
         app.listen(PORT, () => {
             console.log(`Server is running on PORT ${PORT}`)
