@@ -2,6 +2,7 @@ const express = require('express') // Подключаем экспресс
 const path = require('path')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const MongoStore = require('connect-mongodb-session')(session)
 // const path = require('path') // Добавляем модуль пути
 const expressHandlebars = require('express-handlebars') // Подключаем движок
 const homeRoutes = require('./routes/home')
@@ -10,15 +11,20 @@ const addRoutes = require('./routes/add')
 const ordersRoutes = require('./routes/orders')
 const coursesRoutes = require('./routes/courses')
 const authRoutes = require('./routes/auth')
-const User = require('./models/user')
+// const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
-
+const MONGODB_URI = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
 const app = express() // Создаём сервер
 
 // создаём структуру движка
 const hbs = expressHandlebars.create({
     defaultLayout: 'main', //Создаём деволтный слой
     extname: 'hbs' //короткое имя движка
+})
+
+const store = new MongoStore({
+    collection: 'sessions',
+    uri: MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine)//Регистрируем наличие движка
@@ -44,7 +50,8 @@ app.use(express.urlencoded({
 app.use(session({
     secret: 'some secret value',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store
 }))
 app.use(varMiddleware)
 app.use('/', homeRoutes)
@@ -76,8 +83,8 @@ const PORT = process.env.PORT || 3000
 async function start() {
     try {
         // const password = "Lak0sta_1302"
-        const url = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
-        await mongoose.connect(url, {
+        // const url = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
+        await mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
