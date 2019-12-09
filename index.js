@@ -8,6 +8,7 @@ const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const ordersRoutes = require('./routes/orders')
 const coursesRoutes = require('./routes/courses')
+const authRoutes = require('./routes/auth')
 const User = require('./models/user')
 
 const app = express() // Создаём сервер
@@ -42,6 +43,7 @@ app.use('/add',addRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/card', cardRoutes)
 app.use('/orders', ordersRoutes)
+app.use('/auth', authRoutes)
 
 mongoose.set('useFindAndModify', false)
 /* 

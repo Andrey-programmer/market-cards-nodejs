@@ -43,3 +43,7 @@
     margin-left: unset !important;
     margin-bottom: 2rem;
 }
+
+.auth {
+    padding-top: 1rem;
+}
