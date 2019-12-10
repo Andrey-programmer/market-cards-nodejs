@@ -1,5 +1,6 @@
 const express = require('express') // Подключаем экспресс
 const path = require('path')
+const csrf = require('csurf')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
@@ -54,8 +55,11 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+
+app.use(csrf()) // Добавляется после создания сессий
 app.use(varMiddleware)
 app.use(userMiddleware)
+
 app.use('/', homeRoutes)
 app.use('/add',addRoutes)
 app.use('/courses', coursesRoutes)

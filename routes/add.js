@@ -24,7 +24,7 @@ router.post('/', auth, async (req, res) => {
         img: req.body.img,
         userId: req.user._id
     })
-    console.log('From add', course)
+    // console.log('From add', course)
 
     try {
         await course.save()
