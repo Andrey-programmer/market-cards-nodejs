@@ -16,7 +16,8 @@ const authRoutes = require('./routes/auth')
 // const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
-const MONGODB_URI = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
+// const MONGODB_URI = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
+const keys = require('./keys/index') // или просто require('./keys') 
 const app = express() // Создаём сервер
 
 // создаём структуру движка
@@ -27,7 +28,7 @@ const hbs = expressHandlebars.create({
 
 const store = new MongoStore({
     collection: 'sessions',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine)//Регистрируем наличие движка
@@ -51,7 +52,7 @@ app.use(express.urlencoded({
 })) 
 
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store
@@ -92,7 +93,7 @@ async function start() {
     try {
         // const password = "Lak0sta_1302"
         // const url = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
-        await mongoose.connect(MONGODB_URI, {
+        await mongoose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
