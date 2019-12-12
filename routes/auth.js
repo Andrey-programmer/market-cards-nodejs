@@ -6,6 +6,8 @@ const User = require('../models/user')
 const keys = require('../keys/index')
 const regEmail = require('../emails/registration')
 const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
+const resetEmail = require('../emails/reset')
 
 const transporter = nodemailer.createTransport(sendgrid({
     auth: {api_key: keys.SENDGRID_API_KEY}
@@ -93,6 +95,42 @@ router.post('/register', async (req, res) => {
             res.redirect('/auth/login#login')
             await transporter.sendMail(regEmail(email))
         }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.get('/reset', (req, res) => {
+    res.render('auth/reset', {
+        title: 'Восстановление пароля',
+        error: req.flash('error')
+    })
+})
+
+router.post('/reset', (req, res) => {
+    try {
+        crypto.randomBytes(32, async (err, buffer) => {
+            if (err) {
+                req.flash('error', 'Что-то пошло не так, повторите попытку позже') 
+                return res.redirect('/auth/reset')
+            }
+
+            const token = buffer.toString('hex')
+
+            const candidate = await User.findOne({email: req.body.email})
+
+            if(candidate) {
+                candidate.resetToken = token
+                candidate.resetTokenExp = Date.now() + 60 * 60 * 1000 //Время жизни токена
+                await candidate.save()
+                await transporter.sendMail(resetEmail(candidate.email, token))
+                res.redirect('/auth/login')
+            } else {
+                req.flash('error', 'Такой email не зарегистрирован')
+                res.redirect('/auth/reset')
+            }
+
+        })
     } catch (error) {
         console.log(error)
     }
