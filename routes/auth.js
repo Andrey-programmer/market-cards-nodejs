@@ -166,7 +166,7 @@ router.get('/password/:token', async (req, res) => {
 
 })
 
-router.post('/password', async (res, req) => {
+router.post('/password', async (req, res) => {
 try {
     const user = await User.findOne({
         _id: req.body.userId,
