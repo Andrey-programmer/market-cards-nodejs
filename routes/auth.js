@@ -148,8 +148,8 @@ router.get('/password/:token', async (req, res) => {
                 $gt: Date.now() // проверка на то что время токена ещё не превышено
             }
         })
-        console.log(user)
-        console.log(user._id.toString())
+        // console.log(user)
+        // console.log(user._id.toString())
         if(!user) {
             return res.redirect('/auth/login')
         } else {

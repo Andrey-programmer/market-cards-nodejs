@@ -23,7 +23,8 @@ const app = express() // Создаём сервер
 // создаём структуру движка
 const hbs = expressHandlebars.create({
     defaultLayout: 'main', //Создаём деволтный слой
-    extname: 'hbs' //короткое имя движка
+    extname: 'hbs', //короткое имя движка
+    helpers: require('./myutils/hbs-helpers') //создаём директиву типа v-if для hbs
 })
 
 const store = new MongoStore({
