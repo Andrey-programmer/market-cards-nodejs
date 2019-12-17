@@ -8,6 +8,8 @@ const regEmail = require('../emails/registration')
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const resetEmail = require('../emails/reset')
+const {validationResult} = require('express-validator/check')
+const {registerValidators} = require('../myutils/validators')
 
 const transporter = nodemailer.createTransport(sendgrid({
     auth: {api_key: keys.SENDGRID_API_KEY}
@@ -80,12 +82,22 @@ router.get('/logout', async (req, res) => {
 
 })
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try {
-        const {email, password, repeat, name} = req.body
+        const {email, password, confirm, name} = req.body
         const hashPassword = await bcrypt.hash(password, 10) //10 символов шифрования
 
         const candidate = await User.findOne({email})
+
+        //Достаем ошибку если email неверный
+        const errors = validationResult(req)
+        if(!errors.isEmpty()) {
+            req.flash('registerError', errors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#register') //Статус 422 говорит о ошибках валидации на стороне сервера
+        }
+
+
+        //проверка наличия пользователя
         if(candidate) {
             req.flash('registerError', 'Пользователь с таким email уже зарегистрирован')
             res.redirect('/auth/login#register')
