@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth')
 // const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
+const errorHandler = require('./middleware/error')
 // const MONGODB_URI = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
 const keys = require('./keys/index') // или просто require('./keys') 
 const app = express() // Создаём сервер
@@ -70,6 +71,7 @@ app.use('/courses', coursesRoutes)
 app.use('/card', cardRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/auth', authRoutes)
+app.use(errorHandler) //Обязательно подключаем последней
 
 mongoose.set('useFindAndModify', false)
 /* 
