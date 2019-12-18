@@ -1,18 +1,22 @@
 <h3>Добавить новый курс</h3>
+
+{{#if error}}
+    <p class="alert">{{error}}</p>
+{{/if}}
 <div class="row">
     <form action="/add" method="POST" class="col s6">
         <div class="input-field">
-            <input placeholder="Название" id="title" name="title" type="text" class="validate" required>
+            <input placeholder="Название" id="title" name="title" type="text" class="validate" required value="{{data.title}}">
             <label for="title">Название курса</label>
             <span class="helper-text" data-error="Введите название">Helper text</span>
         </div>
         <div class="input-field">
-            <input placeholder="Цена" id="price" name="price" type="text" class="validate" required min="1">
+            <input placeholder="Цена" id="price" name="price" type="text" class="validate" required min="1" value="{{data.price}}">
             <label for="price">Цена курса</label>
             <span class="helper-text" data-error="Введите цену">Helper text</span>
         </div>
         <div class="input-field">
-            <input placeholder="Картинка" id="img" name="img" type="text" class="validate" required>
+            <input placeholder="Картинка" id="img" name="img" type="text" class="validate" required value="{{data.img}}">
             <label for="img">URL картинки</label>
             <span class="helper-text" data-error="Введите URL картинки">Helper text</span>
         </div>

@@ -1,5 +1,5 @@
 const {body} = require('express-validator')
-// const User = require('../models/user') 
+// const User = require('../models/user')
 
 
 exports.registerValidators = [
@@ -38,4 +38,19 @@ exports.registerValidators = [
         .isLength({min: 3})
         .isAlphanumeric()
         .trim()
+]
+
+
+exports.courseValidators = [
+    body('title')
+        .isLength({min: 3})
+        .withMessage('Минимальная длина названия - 3 символа')
+        .trim(), //удаляем лишние пробелы
+
+    body('price')
+        .isNumeric()
+        .withMessage('Введите корректную цену'),
+
+    body('img', 'Введите корректный URL').isURL()
+
 ]
