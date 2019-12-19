@@ -17,6 +17,7 @@ const authRoutes = require('./routes/auth')
 // const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
+const fileMiddleware = require('./middleware/file')
 const errorHandler = require('./middleware/error')
 // const MONGODB_URI = "mongodb+srv://Andrey_proogrammer:Lak0sta_1302@cluster0-t8bpi.mongodb.net/shop"
 const keys = require('./keys/index') // или просто require('./keys') 
@@ -50,6 +51,8 @@ app.set('views', 'pages')//Указываем папку с шаблонами
 // })
 
 app.use(express.static(path.join(__dirname, 'public'))) //Добавляем обработку статических
+//Папку images делаем читаемой по пути '/images/<далее указываем ссылку на файл>'
+app.use('/images', express.static(path.join(__dirname, 'images'))) 
 app.use(express.urlencoded({
     extended: true
 })) 
@@ -61,6 +64,7 @@ app.use(session({
     store
 }))
 
+app.use(fileMiddleware.single('avatar')) //Подключаем перед csrf (<Поле в которое будет складываться файл>)
 app.use(csrf()) // Добавляется после создания сессий
 app.use(flash())
 app.use(varMiddleware)

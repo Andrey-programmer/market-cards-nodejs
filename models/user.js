@@ -18,6 +18,9 @@ const userSchema = new Schema({
     resetTokenExp: {
         type: Date
     },
+    avatarUrl: {
+        type: String
+    },
     cart: {
         items: [
             {
