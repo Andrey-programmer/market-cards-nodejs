@@ -5,6 +5,6 @@ module.exports = {
     SENDGRID_API_KEY: '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',
     // Email from
     EMAIL_FROM: 'andrey.programmer.1302@gmail.com',
-    BASE_URL: 'http://localhost:3000'
+    BASE_URL: 'http://localhost:3000' // В production будет https://polar-coast-11040.herokuapp.com/
 
 }
