@@ -3,6 +3,8 @@ const path = require('path')
 const csrf = require('csurf')
 const flash = require('connect-flash')
 const mongoose = require('mongoose')
+const helmet = require('helmet') // Пакет для защиты express-приложения на сервере (используется как middleware)
+const compression = require('compression') //Пакет для сжатия статических файлов (используется как middleware)
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
 // const path = require('path') // Добавляем модуль пути
@@ -67,6 +69,8 @@ app.use(session({
 app.use(fileMiddleware.single('avatar')) //Подключаем перед csrf (<Поле в которое будет складываться файл>)
 app.use(csrf()) // Добавляется после создания сессий
 app.use(flash())
+app.use(helmet())
+app.use(compression())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
