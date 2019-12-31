@@ -18,12 +18,12 @@
 }
 
 .course img {
-    min-width: 600px;
+    /* min-width: 600px; */
     height: auto;
 }
 
 .course .price.big {
-    font-size: 5rem;
+    font-size: 3rem;
     color: none;
     background-color: none;
 }
@@ -58,6 +58,10 @@
 }
 
 .avatar {
-    max-width: 500px;
+    max-width: 80%;
     height: auto;
+}
+
+.imgcourse {
+    max-width: 100%;
 }

@@ -65,4 +65,7 @@ if ($card) {
     })
 }
 
-M.Tabs.init(document.querySelectorAll('.tabs'));
+M.Tabs.init(document.querySelectorAll('.tabs'))
+
+M.Sidenav.init(document.querySelectorAll('.sidenav'))
+console.log(document.querySelectorAll('.sidenav'))
